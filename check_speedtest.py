@@ -106,19 +106,8 @@ if warning_ping > critical_ping or warning_download < critical_download or warni
      print "For download and upload: Warning threshold must be greater than Critical threshold"
      sys.exit(status['UNKNOWN'])
 
-#cmd = Popen("speedtest-cli", shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
-#output = cmd.stdout.read()
-
-output="""Retrieving speedtest.net configuration...
-Retrieving speedtest.net server list...
-Testing from Belgacom Skynet (194.78.34.161)...
-Selecting best server based on latency...
-Hosted by Cu.be Solutions (Diegem) [7.76 km]: 28.526 ms
-Testing download speed........................................
-Download: 22.64 Mbits/s
-Testing upload speed..................................................
-Upload: 9.07 Mbits/s
-"""
+cmd = Popen("speedtest-cli", shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+output = cmd.stdout.read()
 
 def grep_ping(s):
     try:
