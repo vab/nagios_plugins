@@ -1,0 +1,106 @@
+#!/bin/bash
+#
+#    Program : check_cronjob
+#
+ 
+PROGNAME=`basename $0`
+REVISION=`echo '$Revision: 0.1 $' | sed -e 's/[^0-9.]//g'`
+ 
+. /usr/lib/nagios/plugins/utils.sh
+ 
+print_usage() {
+        echo "Usage: $PROGNAME [-C cronjob] [-s status]"
+        echo "          -C      Cronjob name"
+        echo "          -s      Status to check (enabled/disabled)"
+        echo ""
+        echo "Usage: $PROGNAME --help"
+        echo "Usage: $PROGNAME --version"
+}
+ 
+print_help() {
+        print_revision $PROGNAME $REVISION
+        echo ""
+        echo "Nagios Plugin to check if a cronjob is running through NRPE"
+        echo ""
+        print_usage
+        echo ""
+        echo "Cronjob Status Check. - Nico Marengo 2013"
+        echo ""
+        exit 0
+#        support
+}
+ 
+exitstatus=$STATE_WARNING #default
+MSG="Missing options. Run -h for help"
+while test -n "$1"; do
+        case "$1" in
+                --help)
+                        print_help
+                        exit $STATE_OK
+                        ;;
+                -h)
+                        print_help
+                        exit $STATE_OK
+                        ;;
+                --version)
+                        print_revision $PROGNAME $REVISION
+                        exit $STATE_OK
+                        ;;
+                -V)
+                        print_revision $PROGNAME $REVISION
+                        exit $STATE_OK
+                        ;;
+                -C)
+                    CRONJOB=$2;
+                    shift;
+                    ;;
+                -s) STATUS=$2;
+                    shift;
+                ;;
+ 
+                *)
+                        echo "Unknown argument: $1"
+                        print_usage
+                        exit $STATE_UNKNOWN
+                        ;;
+        esac
+        shift
+done
+ 
+if [ -z "$CRONJOB" ]; then
+        exitstatus=$STATE_CRITICAL
+        MSG="What Cronjob?"
+fi
+ 
+#JOB=`sudo crontab -l | grep "${CRONJOB}" | head -c 1`
+JOB=`cat /etc/cron.d/* | grep "${CRONJOB}" | head -c 1`
+DISABLEDSTATUS='#'
+
+if [ -z "$JOB" ]; then
+        exitstatus=$STATE_CRITICAL
+        MSG="Cronjob not found"
+else
+        if [ -z "$STATUS" ]; then
+                exitstatus=$STATE_CRITICAL
+                MSG="What Status?"
+        elif [ "$STATUS" = "enabled" ]; then
+                if [ "$JOB" != $DISABLEDSTATUS ];then
+                        exitstatus=$STATE_OK
+                        MSG="OK: ${CRONJOB} enabled"
+                elif [ "$JOB" = $DISABLEDSTATUS ];then
+                        exitstatus=$STATE_CRITICAL
+                        MSG="CRITICAL: ${CRONJOB} disabled"
+                fi
+        elif [ "$STATUS" = "disabled" ]; then
+                if [ "$JOB" != $DISABLEDSTATUS ];then
+                        exitstatus=$STATE_CRITICAL
+                        MSG="CRITICAL: ${CRONJOB} enabled"
+                elif [ "$JOB" = $DISABLEDSTATUS ];then
+                        exitstatus=$STATE_OK
+                        MSG="OK: ${CRONJOB} disabled"
+                fi
+        fi
+fi
+ 
+echo $MSG
+exit $exitstatus
