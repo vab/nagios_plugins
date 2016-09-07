@@ -38,7 +38,7 @@ def print_usage():
     print "-r | --cd             : Critical threshold for download"
     print "-t | --wu             : Warning threshold for upload"
     print "-y | --cu             : Critical threshold for upload"
-    print "example: "+sys.argv[0]+"-t all --wp 30 --cp 40 --wd 40 --cd 30 --wu 15 --wu 10"
+    print "example: "+sys.argv[0]+" -t all --wp 30 --cp 40 --wd 40 --cd 30 --wu 15 --wu 10"
     sys.exit(status['UNKNOWN'])
 
 cache = apt.Cache()
