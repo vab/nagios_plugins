@@ -37,11 +37,11 @@ interfaces_oid=1.3.6.1.2.1.2.2.1.2
 if [ "$system" = "cisco" ];
 	then
         if_index=`$bin_snmpwalk -c $community -v 2c $ip $interfaces_oid | grep $IF | sed 's/^.*\.//;s/\ .*$//'`
-        pidfile=/tmp/"$name"_"$if_index"_check_bandwidth.pid
+        pidfile=/tmp/"$name"_"$if_index"_check_bandwidth_"$current_pid".pid
 fi
 if [ "$system" = "linux" ];
     then
-        pidfile=/tmp/"$name"_"$IF"_check_bandwidth.pid
+        pidfile=/tmp/"$name"_"$IF"_check_bandwidth_"$current_pid".pid
 fi
 
 if [ -f $pidfile ];
@@ -54,21 +54,21 @@ fi
 
 if [ "$system" = "linux" ];
     then
-        tmpfile_rx=/tmp/"$name"_"$IF"_check_bandwidth_rx.tmp
-        tmpfile_tx=/tmp/"$name"_"$IF"_check_bandwidth_tx.tmp
-        reverse_tmpfile_rx=/tmp/"$name"_"$IF"_reverse_check_bandwidth_rx.tmp
-        reverse_tmpfile_tx=/tmp/"$name"_"$IF"_reverse_check_bandwidth_tx.tmp
-        deltafile_rx=/tmp/"$name"_"$IF"_delta_check_bandwidth_rx.tmp
-        deltafile_tx=/tmp/"$name"_"$IF"_delta_check_bandwidth_tx.tmp
+        tmpfile_rx=/tmp/"$name"_"$IF"_check_bandwidth_rx_"$current_pid".tmp
+        tmpfile_tx=/tmp/"$name"_"$IF"_check_bandwidth_tx_"$current_pid".tmp
+        reverse_tmpfile_rx=/tmp/"$name"_"$IF"_reverse_check_bandwidth_rx_"$current_pid".tmp
+        reverse_tmpfile_tx=/tmp/"$name"_"$IF"_reverse_check_bandwidth_tx_"$current_pid".tmp
+        deltafile_rx=/tmp/"$name"_"$IF"_delta_check_bandwidth_rx_"$current_pid".tmp
+        deltafile_tx=/tmp/"$name"_"$IF"_delta_check_bandwidth_tx_"$current_pid".tmp
 elif [ "$system" = "cisco" ];
     then
-        tmpfile_rx=/tmp/"$name"_"$if_index"_check_bandwidth_rx.tmp
-        tmpfile_tx=/tmp/"$name"_"$if_index"_check_bandwidth_tx.tmp
-        reverse_tmpfile_rx=/tmp/"$name"_"$if_index"_reverse_check_bandwidth_rx.tmp
-        reverse_tmpfile_tx=/tmp/"$name"_"$if_index"_reverse_check_bandwidth_tx.tmp
-        deltafile_rx=/tmp/"$name"_"$if_index"_delta_check_bandwidth_rx.tmp
-        deltafile_tx=/tmp/"$name"_"$if_index"_delta_check_bandwidth_tx.tmp
-        laststate_file=/tmp/"$name"_"$if_index"_laststate.tmp
+        tmpfile_rx=/tmp/"$name"_"$if_index"_check_bandwidth_rx_"$current_pid".tmp
+        tmpfile_tx=/tmp/"$name"_"$if_index"_check_bandwidth_tx_"$current_pid".tmp
+        reverse_tmpfile_rx=/tmp/"$name"_"$if_index"_reverse_check_bandwidth_rx_"$current_pid".tmp
+        reverse_tmpfile_tx=/tmp/"$name"_"$if_index"_reverse_check_bandwidth_tx_"$current_pid".tmp
+        deltafile_rx=/tmp/"$name"_"$if_index"_delta_check_bandwidth_rx_"$current_pid".tmp
+        deltafile_tx=/tmp/"$name"_"$if_index"_delta_check_bandwidth_tx_"$current_pid".tmp
+        laststate_file=/tmp/"$name"_"$if_index"_laststate_"$current_pid".tmp
 fi
 
 warn_kbits=`$bin_expr $warn '*' 1000000`
