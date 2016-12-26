@@ -4,7 +4,7 @@ INTERVAL="1"  # update interval in seconds
 
 if [ -z "$1" ]; then
         echo
-        echo "example: plugin.sh HOSTNAME system interface_name time warning_mbit/s critical_mbit/s total mbit/s;" 
+        echo "example: plugin.sh HOSTNAME system interface_name time warning_mbit/s critical_mbit/s total mbit/s;"
         echo
         echo "./check_bandwidth.sh localhost linux eth0 15 80 90 100"
         echo "./check_bandwidth.sh switchname cisco GigabitEthernet0/1 15 80 90 100 192.192.192.192 snmp-community"
@@ -32,10 +32,10 @@ bin_wc=`which wc`
 bin_awk=`which awk`
 bin_snmpwalk=`which snmpwalk`
 interfaces_oid=1.3.6.1.2.1.2.2.1.2
-                                                                                                                                                                        
-                                                                                                                                                                        
-if [ "$system" = "cisco" ];                                                                                                                                             
-    then                                                                                                                                                                
+
+
+if [ "$system" = "cisco" ];
+	then
         if_index=`$bin_snmpwalk -c $community -v 2c $ip $interfaces_oid | grep $IF | sed 's/^.*\.//;s/\ .*$//'`
         pidfile=/tmp/"$name"_"$if_index"_check_bandwidth.pid
 fi
@@ -174,7 +174,7 @@ elif [ "$system" = "cisco" ];
             do
                 rx_now=`$bin_snmpwalk -c $community -v 2c -Oqv $ip 1.3.6.1.2.1.2.2.1.10.$if_index`
                     if [ $rx_now -ge $rx_old ];
-                        then 
+                        then
                         rx_tag=1
                             if [ $rx_now -gt $rx_old ];
                                 then
@@ -186,7 +186,7 @@ elif [ "$system" = "cisco" ];
                 rx_old=$rx_now
                 tx_now=`$bin_snmpwalk -c $community -v 2c -Oqv $ip 1.3.6.1.2.1.2.2.1.16.$if_index`
                     if [ $tx_now -ge $tx_old ];
-                        then 
+                        then
                         tx_tag=1
                             if [ $tx_now -gt $tx_old ];
                                 then
